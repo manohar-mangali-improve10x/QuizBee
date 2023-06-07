@@ -19,10 +19,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QuestionsActivity extends AppCompatActivity {
+public class QuestionsActivity extends AppCompatActivity implements OnServiceListener {
     private List<Quiz> quizList = new ArrayList<>();
     private QuestionAdapter adapter;
     private ActivityQuestionsBinding binding;
+    private int currentQuestionNumber = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,25 @@ public class QuestionsActivity extends AppCompatActivity {
         setUpData();
         connectData();
         getApiData();
+        handlePreviousBtn();
+        handleNextBtn();
+    }
+
+    private void handleNextBtn() {
+        binding.nextBtn.setOnClickListener(v -> {
+            currentQuestionNumber++;
+            showQuestionDetails(currentQuestionNumber);
+        });
+    }
+
+    private void handlePreviousBtn() {
+        binding.previousBtn.setOnClickListener(v -> {
+            currentQuestionNumber--;
+            showQuestionDetails(currentQuestionNumber);
+            if (currentQuestionNumber == 1){
+                binding.previousBtn.setEnabled(false);
+            }
+        });
     }
 
     private void getApiData() {
@@ -59,16 +80,21 @@ public class QuestionsActivity extends AppCompatActivity {
 
     private void setUpData() {
         adapter = new QuestionAdapter(new ArrayList<>());
+        adapter.setServiceAction(this);
     }
 
     public void showQuestionDetails(int questionNo) {
+        currentQuestionNumber = questionNo;
         Question question = quizList.get(0).getQuestions().get(questionNo - 1);
         binding.questionTxt.setText(question.getQuestion());
         binding.oneRb.setText(question.getAnswers().get(0));
         binding.twoRb.setText(question.getAnswers().get(1));
         binding.threeRb.setText(question.getAnswers().get(2));
         binding.fourRb.setText(question.getAnswers().get(3));
+    }
 
-
+    @Override
+    public void onClicked(int questionNo) {
+        showQuestionDetails(questionNo);
     }
 }

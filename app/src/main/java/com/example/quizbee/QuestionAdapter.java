@@ -12,9 +12,13 @@ import com.example.quizbee.model.Question;
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionViewHolder> {
-    List<Question> questions;
+     private List<Question> questions;
+     private OnServiceListener serviceListener;
     public QuestionAdapter(List<Question> questions) {
         this.questions = questions;
+    }
+    void setServiceAction(OnServiceListener listener){
+        this.serviceListener = listener;
     }
 
     void setQuestions(List<Question> questions) {
@@ -35,6 +39,7 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionViewHolder> {
         Question quiz = questions.get(position);
         holder.binding.qnoTxt.setText(String.valueOf(quiz.getNumber()));
         holder.binding.getRoot().setOnClickListener(v -> {
+            serviceListener.onClicked(quiz.getNumber());
         });
 
     }
