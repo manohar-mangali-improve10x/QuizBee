@@ -75,7 +75,6 @@
         android:layout_marginBottom="60dp"
         android:backgroundTint="#FF5722"
         android:text="Previous"
-        android:textColor="#FCFFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/options_rg" />
 
@@ -86,7 +85,6 @@
         android:layout_marginStart="192dp"
         android:backgroundTint="#FF5722"
         android:text="Next"
-        android:textColor="#F0FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/previous_btn"
         app:layout_constraintStart_toEndOf="@+id/previous_btn"
         app:layout_constraintTop_toTopOf="@+id/previous_btn"

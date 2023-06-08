@@ -41,17 +41,14 @@ public class QuestionsActivity extends AppCompatActivity implements OnServiceLis
     private void handleNextBtn() {
         binding.nextBtn.setOnClickListener(v -> {
             currentQuestionNumber++;
-            showQuestionDetails(currentQuestionNumber);
+            actionDetails(currentQuestionNumber);
         });
     }
 
     private void handlePreviousBtn() {
         binding.previousBtn.setOnClickListener(v -> {
             currentQuestionNumber--;
-            showQuestionDetails(currentQuestionNumber);
-            if (currentQuestionNumber == 1){
-                binding.previousBtn.setEnabled(false);
-            }
+            actionDetails(currentQuestionNumber);
         });
     }
 
@@ -63,7 +60,7 @@ public class QuestionsActivity extends AppCompatActivity implements OnServiceLis
             public void onResponse(Call<List<Quiz>> call, Response<List<Quiz>> response) {
                 quizList = response.body();
                 adapter.setQuestions(quizList.get(0).getQuestions());
-                showQuestionDetails(1);
+                actionDetails(1);
             }
 
             @Override
@@ -83,7 +80,35 @@ public class QuestionsActivity extends AppCompatActivity implements OnServiceLis
         adapter.setServiceAction(this);
     }
 
-    public void showQuestionDetails(int questionNo) {
+    public void actionDetails(int questionNo) {
+        showQuestionDetails(questionNo);
+        refreshData(questionNo);
+        handleNextBtnStyling();
+        handlePreviousBtnStyling();
+    }
+
+    private void handlePreviousBtnStyling() {
+        if (currentQuestionNumber == 1){
+            binding.previousBtn.setEnabled(false);
+        }else {
+            binding.previousBtn.setEnabled(true);
+        }
+    }
+
+    private void handleNextBtnStyling() {
+        if (currentQuestionNumber == quizList.get(0).getQuestions().size()){
+            binding.nextBtn.setEnabled(false);
+        }else {
+            binding.nextBtn.setEnabled(true);
+        }
+    }
+
+    private void refreshData(int questionNo) {
+        adapter.selectedQuestion = questionNo;
+        adapter.notifyDataSetChanged();
+    }
+
+    private void showQuestionDetails(int questionNo) {
         currentQuestionNumber = questionNo;
         Question question = quizList.get(0).getQuestions().get(questionNo - 1);
         binding.questionTxt.setText(question.getQuestion());
@@ -95,6 +120,6 @@ public class QuestionsActivity extends AppCompatActivity implements OnServiceLis
 
     @Override
     public void onClicked(int questionNo) {
-        showQuestionDetails(questionNo);
+        actionDetails(questionNo);
     }
 }
